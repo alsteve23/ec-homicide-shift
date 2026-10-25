@@ -1,0 +1,3 @@
+# Open sources used to create this project
+- https://geonode.inec.gob.ec/catalogue/#/all?d=4%3Bdataset%3Bvector
+- https://www.datosabiertos.gob.ec/dataset/homicidios-intencionales/resource/36b055c8-e10c-4e57-ba25-3046ca5ef15d

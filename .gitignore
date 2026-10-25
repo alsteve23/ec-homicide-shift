@@ -1,0 +1,13 @@
+data/raw/*
+!data/raw/.gitkeep
+/data/external/cantones
+
+# Python / Jupyter
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+
+
+# OS
+Thumbs.db
+.DS_Store
