@@ -1,6 +1,7 @@
 data/raw/*
 !data/raw/.gitkeep
 /data/external/cantones
+data/interim/
 
 # Python / Jupyter
 __pycache__/
