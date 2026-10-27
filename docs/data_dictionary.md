@@ -72,6 +72,7 @@ The dictionaries are not a complete or exact list of the values in the data:
 | 1. Clean and merge victim records | `src/01_limpieza.py` | `data/raw/` (2 XLSX) | `data/interim/homicidios_limpio.csv` | **No** (one row per victim; `data/interim/` is git-ignored) |
 | 2. Population by canton and year; code validation | `src/02_poblacion.py` | `data/external/` (INEC projections, boundaries) + step 1 output | `data/processed/poblacion_canton_anio.csv` | Yes (aggregate) |
 | 3. Aggregates for the views | `src/03_agregados.py` | steps 1 and 2 outputs | `data/processed/canton_mes.csv`, `nacional_mes.csv`, `canton_anio.csv`, `canton_periodo.csv`, `perfil.csv` | Yes (aggregate) |
+| 4. Web geometry | `src/04_geometrias.py` (runs mapshaper 0.6.102 via `npx`) | `data/external/cantones/` | `data/processed/cantones.topo.json` | Yes (boundaries, no victim data) |
 
 Each script stops with `[FAIL]` if a verification does not pass, so later steps never run on inconsistent data.
 
@@ -218,6 +219,14 @@ Parameters: rate per 100,000; 2026 counts 8 months; trailing 3-month window; uns
 - **`perfil.csv`:** variables `arma_grupo`, `grupo_edad`, `motivo_grupo`, `area_hecho`. Missing values are kept as the category `Sin dato`, so each variable adds up to 45,497. Proportions in V4 should exclude `Sin dato` and say so.
 
 **Verifications:** every file keeps 45,497 victims; complete grids (221 × 152, 221 × 13); yearly and period totals (base 5,285; recent 37,652) match the cleaned data; each profile variable adds up to all victims.
+
+## Geometry: `data/processed/cantones.topo.json`
+
+TopoJSON, EPSG:4326, two objects: `continente` (218 cantons) and `galapagos` (3 cantons, province `20`, drawn in an inset). Properties: `codigo_canton`, `canton`. 204 KB.
+
+mapshaper steps: `-clean` (repairs 21,644 intersections and 14,663 gaps/overlaps in the source layer) → `-proj wgs84` → keep and rename `code`, `name_es` → `-simplify 5% weighted keep-shapes` → `-clean` → split by region → TopoJSON, quantization 1e5.
+
+**Verifications:** < 1 MB; 218 + 3 cantons; Galápagos layer has only province `20`; codes equal the 221 codes of the population file; no empty geometry; per-canton area change vs. the original layer: median 0.09%, max 1.41% (Suscal).
 
 ## Pending
 
