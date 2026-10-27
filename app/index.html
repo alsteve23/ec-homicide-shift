@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cantón a Cantón: homicidios intencionales en Ecuador, 2014–2026</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- Pinned versions (no ranges, no @latest) -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>Cantón a Cantón</h1>
+      <p class="lede">
+        ¿Qué cantones escalaron en violencia homicida entre 2014–2018 y 2021–2026, y cuándo empezó la escalada?
+        Homicidios intencionales por cantón, Ecuador, enero de 2014 a agosto de 2026.
+      </p>
+    </header>
+
+    <section class="selection-bar" aria-label="Cantones seleccionados">
+      <span class="selection-title">Selección <span id="selection-count"></span></span>
+      <ul id="selection-chips"></ul>
+      <span id="selection-empty">Haz clic en un cantón del mapa para compararlo (máximo 5).</span>
+      <button id="clear-selection" type="button">Limpiar</button>
+      <span id="selection-msg" role="alert"></span>
+    </section>
+
+    <div id="loading">Cargando datos…</div>
+
+    <main class="grid">
+      <section class="panel panel-map">
+        <h2>Tasa por cantón · <span id="period-label"></span></h2>
+        <p class="panel-note">Víctimas por 100 mil habitantes por año en el periodo elegido en la línea de tiempo.</p>
+        <div id="map" class="chart"></div>
+      </section>
+
+      <section class="panel panel-timeline">
+        <h2>Evolución mensual</h2>
+        <p class="panel-note">En gris, el total nacional. 2026 (punteado) es parcial y preliminar.</p>
+        <div id="timeline" class="chart"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      Fuentes: Ministerio del Interior, <em>Homicidios Intencionales</em> (datosabiertos.gob.ec); INEC, proyecciones de
+      población (rev. 2024) y cartografía cantonal (2026). Solo se publican agregados por cantón.
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

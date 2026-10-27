@@ -56,11 +56,21 @@ Unless stated otherwise, "full data" = 2014-01-01 to 2026-08-31 (45,497 victims)
 
 ## Requirements and Design
 
-_(to be filled from week 3)_
+- **V1 color encoding:** threshold scale with fixed doubling breaks (5, 10, 20, 40, 80 per 100k per year), 6 classes sampled from reversed viridis (darker = higher). Fixed breaks keep colors comparable when the brushed period changes. True zeros are white with a gray outline; rates from fewer than 20 victims in the period are overlaid with a hatch pattern (light + dark strokes, visible on both ends of the ramp). Evidence: `app/js/views/map.js`. Status: implemented, not yet user-validated. R2, R5. Munzner: encoding. (2026-10-27)
+- **Galápagos inset at the same scale as the mainland,** only its position moved, so areas stay comparable (labelled in the map). Status: implemented. R2. Munzner: encoding. (2026-10-27)
+- **V2 encoding:** national line in gray as permanent context; selected cantons in Okabe-Ito colors with direct labels at the line end (identity never by color alone; chips in the selection bar also show names). 2026 drawn dashed on a shaded band labelled "preliminary". Evidence: `app/js/views/timeline.js`. R1, R5. Munzner: encoding. (2026-10-27)
+- **Brush on a separate track under the x axis,** snapped to whole years (rates use annual population). Clicking the track without dragging selects a single year. The brushed period is mirrored as a shaded band in the plot and in the map title. Default period: 2021–2026 (recent period of the analytical question). R1, R2. Munzner: interaction. (2026-10-27)
+- **Selection:** max 5 cantons; each keeps its color slot while selected (removing one never recolors the others; a new canton takes the first free slot). Verified in a scripted browser test (Playwright): 6th click rejected with a message; slot reuse correct. R3. Munzner: interaction. (2026-10-27)
+- **Uncertainty is substantial in the base period:** with the < 20 victims rule, 2014–2018 has 147 unstable, 18 zero and 56 stable cantons; 2021–2026 has 94 unstable, 17 zero and 110 stable (of 221). Evidence: `data/processed/canton_anio.csv`. Status: demonstrated. R5. Supports showing hatching rather than hiding small cantons. (2026-10-27)
+- **Galápagos:** 2 victims in 2014–2026, both in Santa Cruz (2017 and 2020); the other two cantons have zero. Rendered as white (true zero) in most periods, which is why zero cantons need a visible outline. Status: demonstrated. (2026-10-27)
 
 ## Implementation
 
 - **Web geometry:** reprojected EPSG:32717 → EPSG:4326, simplified to 5% of vertices (Visvalingam, weighted; `keep-shapes`), TopoJSON with quantization 1e5, split into two objects (218 mainland cantons, 3 Galápagos cantons for the inset). File size 204 KB (source shapefile 9.4 MB). Per-canton area change vs. the original: median 0.09%, max 1.41% (Suscal). mapshaper 0.6.102. Evidence: `src/04_geometrias.py`. Status: demonstrated. Munzner: algorithm level (load time). (2026-10-27)
+
+- **App architecture:** static HTML + ES modules + D3 v7.9.0 + topojson-client v3.1.0 from jsDelivr (pinned). One shared state (`app/js/state.js`: selection, period, metric) broadcasting `selection`/`period`/`metric` events through `d3.dispatch`; views only listen and never modify each other. The browser only sums annual victims and person-years over the brushed years (rate = Σvictims / Σperson-years × 100k), so partial 2026 is weighted by its 8 months. `src/05_app_data.py` copies the 4 aggregate files into `app/data/` (GitHub Pages serves only `app/`) and refuses files with individual-level columns. Munzner: algorithm. (2026-10-27)
+- **First performance measurements (headless Chromium, cloud sandbox, local server; indicative only):** data load + parse ≈ 120–135 ms; first render ≈ 220–260 ms; map update after a brush change ≈ 3–4 ms (target < 100 ms). Formal measurement pending for week 5. Status: preliminary. Munzner: algorithm. (2026-10-27)
+- **Rate check:** Guayaquil 2014–2018 shown as 7.5 per 100k (1,006 victims / 13,474,822 person-years), matching a direct computation from `canton_anio.csv`. Status: demonstrated. (2026-10-27)
 
 ## Evaluation
 
