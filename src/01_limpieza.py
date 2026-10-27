@@ -211,5 +211,5 @@ print(miss[miss > 0].to_string())
 # ---------------------------------------------------------------------------
 INTERIM.mkdir(parents=True, exist_ok=True)
 out = INTERIM / "homicidios_limpio.csv"
-df.to_csv(out, index=False, encoding="utf-8")
+df.to_csv(out, index=False, encoding="utf-8", lineterminator="\n")
 print(f"\nSaved {out.relative_to(ROOT)} ({len(df):,} rows, {df.shape[1]} columns)")

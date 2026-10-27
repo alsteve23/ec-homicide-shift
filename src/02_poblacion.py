@@ -138,5 +138,5 @@ print(national.to_string())
 # 5. Save
 # ---------------------------------------------------------------------------
 OUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-out.to_csv(OUT_FILE, index=False, encoding="utf-8")
+out.to_csv(OUT_FILE, index=False, encoding="utf-8", lineterminator="\n")
 print(f"\nSaved {OUT_FILE.relative_to(ROOT)} ({len(out):,} rows)")
