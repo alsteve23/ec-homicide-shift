@@ -22,7 +22,10 @@ Unless stated otherwise, "full data" = 2014-01-01 to 2026-08-31 (45,497 victims)
 ### Sources
 - Ministerio del Interior, *Homicidios Intencionales* open data (datosabiertos.gob.ec): 2014–2025 file (39,821 rows) and Jan–Aug 2026 file (5,676 rows). One row = one victim, 33 columns. Both published 18 Sep 2026; metadata note says records are subject to updates.
 - Official data dictionaries: `MDI_HomicidiosIntencionales_PM_BBD_Historica` and `MDI_HomicidiosIntencionales_PM_2025`. Some definitions refer to the National Police *Manual de conceptualización de variables*.
-- INEC canton boundaries (221 polygons, EPSG:32717). Population projections (INEC, Rev. 2024) and the 2026 geographic classifier: pending.
+- INEC canton boundaries (221 polygons, EPSG:32717). The 2026 geographic classifier: pending.
+- **Population denominator:** INEC *Estimaciones y Proyecciones de Población, revisión 2024* (based on the 2022 Census), canton-level totals 2010–2035, values as of 30 June of each year. 221 cantons, the same number as the boundary layer. The table identifies cantons by name only (no DPA codes), so the join requires a name-to-code step. National total for 2026: 18,243,816. Evidence: `data/external/Tabulado_cantonal_2010-2035_rev2024.xlsx`. Status: demonstrated. (2026-10-26)
+- **Name-based join is almost complete:** matching homicide cantons to the population table by province + canton name (accents removed) leaves 3 of 216 unmatched, all naming differences: Quito ("Distrito Metropolitano De Quito") and the two cantons of Santo Domingo de los Tsáchilas (province abbreviated "STO DGO" in the homicide data). The 5 cantons with no recorded homicides in 2014–Aug 2026 are Oña, Marcabelí, Yacuambi, San Cristóbal and Isabela. Status: demonstrated (preliminary check, before the join script). (2026-10-26)
+- **Many small cantons:** 89 of 221 cantons (40%) have fewer than 20,000 inhabitants in 2026. Rates there are unstable; motivates the low-population flag (R5). Threshold still to be decided. Status: demonstrated. (2026-10-26)
 
 ### Data quality findings
 - **Missing values are encoded three ways:** `NaN`, the string `SIN_DATO`, and `0` in coordinates (~1,567 rows). A naive `isna()` reports 0% missing. Status: demonstrated.
